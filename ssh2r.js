@@ -100,6 +100,8 @@ setInterval(function () {
       console.log("check", dt, macDb[mac].freq, options.dfactor*macDb[mac].freq);
       console.log("Exited: "+mac+" ("+Math.floor(macDb[mac].session/1000)+" secs)");
       macDb[mac].live = false;
+      if (options.report) 
+        mqtt_client.publish("rfmon/mac/"+mac, JSON.stringify(macDb[mac]));
     } else 
       ++nl;
   }

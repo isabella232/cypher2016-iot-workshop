@@ -44,11 +44,11 @@
               var h = Math.floor(x/(60*60*1000));
               var m = Math.floor((x-h*60*60*1000)/(60*1000));
               var s = Math.floor((x-h*60*60*1000-m*60*1000)/(1000));
-              return h+':'+m+'.'+s;
+              return h+':'+m+':'+s;
             } else if (x > 60*1000) {
               var m = Math.floor((x)/(60*1000));
-              var s = Math.floor((x-m*60*1000)/(1000));
-              return m+'.'+s
+              var s = Math.floor((x-m*60*1000)/(100))/10;
+              return m+':'+s;
             } else if (x > 1000) {
               x = Math.floor(x/100)/10;
               return x + " s";
@@ -97,7 +97,7 @@
     <tr ng-repeat="m in macs | orderBy:'-last'">
       <td ng-style="{'color': m.live?'blue':'#7f7f7f'}">{{m.mac}}</td>
         <td>{{m.last | date:'hh:mm:ss'}}</td>
-        <td>{{m.session | stime}}</td><td>{{m.session | stime}}</td>
+        <td>{{m.session | stime}}</td><td>{{m.freq | stime}}</td>
     </tr>
     </table>
     </div>

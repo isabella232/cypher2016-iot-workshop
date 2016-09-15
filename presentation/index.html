@@ -442,6 +442,8 @@ font-family: 'Hind Siliguri', sans-serif; -->
         </blockquote>
         <p class="font2">Right now we're already at 15 billion connected devices.</p>
 
+        <p class="poll">Count: <span class="poll_count"></span></p>
+
         <div class="notes"><pre>        
         
         So these things are all happening -- and you can look at these trends
@@ -1128,6 +1130,51 @@ http://www.ifm.com/ifmus/web/application-story-vision.htm
         </pre></div>
     </div>
 
+    <div class="step slide " data-x="13000" data-y="-2500" >
+        <h1 class="font1 heading">Kinect</h1>
+        <img src="img/kinect.png" width="80%" />
+        <img src="img/kinect_xbox1.jpg" width="65%" />
+
+        <p>Source: <a href="https://en.wikipedia.org/wiki/Kinect">Wikipedia</a></p>
+
+        <div class="notes"><pre>
+
+        One interesting example of a custom made vision sensor getting into the hands of the consumers comes to us from the world of gaming -- Microsoft's kinect. For those of you who don't know, microsoft introduced these as an accessory to their very successful gaming platform - the Xbox 360 -- back in 2010.  This is a device that alows you to play games on the teh Xbox 360 just by moving.  They used the catch phrase "you are the controller". You just stand in from of it and you avatar is inside the game, doing exactly what you are doing.  The kinect used a techniqu called structured lighting.  What it does is, it project a grid over the scene.  The grid is invisible because it is IR, but the CMOS imaging sensor on teh kinect can see it.  So when you stand in from of it it, the grid is distorted by you.  
+
+        </pre></div>
+    </div>
+
+    <div class="step slide hide" data-x="13000" data-y="-3500" >
+        <h1 class="font1 heading">Structured Light</h1>
+        <img src="img/structured_light.jpg" width="80%" />
+
+        <p>Source: <a href="http://automodellingandvideomapping.blogspot.in/2010_05_01_archive.html">automodellingandvideomapping</a></p>
+
+        <div class="notes"><pre>
+
+        And so it becomes easy for an algorithm to look for lines and decide
+        the shape behind the distortion.
+
+        </pre></div>
+    </div>
+
+    <div class="step " data-x="13000" data-y="-2500" >
+        <div class="notes"><pre>
+
+        Now the kinect, being a mass produced consumer item, is not as
+        expensive as a vision camera. So after the kinect was released, it was
+        only a short time before people figured out how to read the data from
+        it. It helped that it used a regular USB connector.  And you can find
+        multiple innvotive projects around it.
+
+        People have built 3D scanners.  Software that can read sign language.
+        All manner of interesting UI concepts and so forth.
+
+        Then in 2014, MS came out with the XBOX one.  And this time they bundled a kinect along with the game controller.  This version of the kinect was even better than the last one. It has what is called a time of flight sensor.  That is a type of thing that gives you the depth of each point of the image in addition to the picture itself.  This very advanced sensor sells for under $100!  Most industrial cameras cost 1000s of dollars.
+
+        </pre></div>
+    </div>
+
     <div class="step slide" data-x="13000" data-y="-500" >
         <h1 class="font1 heading">Traffic Sensors</h1>
         <figure style="position:absolute;left:5%;top:20%;width:40%;">
@@ -1141,23 +1188,29 @@ http://www.ifm.com/ifmus/web/application-story-vision.htm
         <p style="position:absolute;left:5%;top:80%;font-size:20px;">Image Source: <a href="https://www.fhwa.dot.gov/publications/publicroads/07nov/04.cfm">U.S. Dept. of Transportation</a></p>
         <div class="notes"><pre>
 
-        Let's talk about traffic sensors for a minute.  The main application
+        So it is wise to build on top of consumer tech.  Take the case of traffic sensors.
         of these things is to help guage the amount of traffic, and the speed
         of its movement thru secotions of the highway.  And this is how it
         looks.
+
+        [Explain how it works]  [Will never be made cheaper or miniaturized]
+
+        [How google traffic works]
 
         </pre></div>
     </div>
 
     <div class="step slide" data-x="14000" data-y="-1500" >
         <h1 class="font1 heading">Sensor Fusion</h1>
-        <ul class="font2 list">
+        <ul class="font2 list" style="font-size: 32px;margin-bottom: 20px;">
             <li>Combine data from multiple sensors</li>
             <li>Sensors are of different types; have different failure scenarious</li>
             <li>Errors from sensors are uncorrelated</li>
         </ul>
-        <p>e.g., Self-driving cars use CMOS + Lidar + Radar + Ultrasonic + Infrared + ...</p>
+        <img src="img/google_car.jpg" height="55%" style="margin-left: 156px;">
         <div class="notes"><pre>
+
+        <p>e.g., Self-driving cars use CMOS + Lidar + Radar + Ultrasonic + Infrared + ...</p>
 
         So what can we do about the noise -- without increasing the cost of
         the system. Well we can use input from another sensor.  I could have
@@ -1167,15 +1220,82 @@ http://www.ifm.com/ifmus/web/application-story-vision.htm
 
         Or, I can use some other sensor.  Ideally, something that has an error
         rate uncorrelated with the this one error rate.  This is sometimes
-        called sensor fusion. The most famous use of it is in driverless cars
+        called sensor fusion. 
+        </pre></div>
+    </div>
+    <div class="step" data-x="14000" data-y="-1350" data-scale="0.5">
+
+        <div class="notes"><pre>
+        The most famous use of it is in driverless cars
         -- which combine cmos, lidar, radar and IR.  Each of these sensors by
         themselves have catastrophic error rates.  Put them all togather and
-        you have reasonable chance of avoiding disaster scenaroijs.
+        you have reasonable chance of avoiding disaster scenarios.
 
+        Well at least that's the hope.  It didn't work out so well on that Tesla that met with an accident this July.  First reported fatality on a self-driven car. [Tell the story]
+
+        For the workshop today, I have my own little experimet with Sensor Fusion.
+        [Switch to demo screen]
+        This is a regular wi-fi router.  But it is running custom firmware.
+        And it is able to tell me how many phones are there in this room.
+        Well not quite.  It gives me a list of unique MAC addresses. [explain]
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="14000" data-y="-2500" >
+        <h1 class="font1 heading">WiFi Monitor Mode</h1>
+        <ul class="font2 list" style="font-size:40px;">
+            <li>One of 7 supported 802.11 modes</li>
+            <li>Allows WiFi card to passive listen to probe packets</li>
+            <li>Need not associate with any access point</li>
+            <li>Phones send out probe packets every few seconds</li>
+            <ul class="font2 list" style="font-size:36px;">
+                <li>They look to switch from mobile data to Wi-Fi</li>
+                <li>Join known routers quickly</li>
+            </ul>
+        </ul>
+        <div class="notes"><pre>
+
+        [Show demo first]
         This is a regular wi-fi router.  But it is running custom firmware.
         And it is able to tell me how many phones are there in this room.
         Well not quite.  It gives me a list of unique MAC addresses. [explain]
 
+        People use this to track crowds.  I even found a company that implemented an attendance system based on this.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="14000" data-y="-3500" >
+        <h1 class="font1 heading" style="font-size:80px;">The Air is Alive with RF</h1>
+        <ul class="font2 list" style="margin-bottom:30px;"">
+            <li>It's getting easier to play with RF</li>
+            <li>RF Chipsets are more flexible, configurable</li>
+            <li>SDRs open up interesting possibilities</li>
+        </ul>
+        <img src="img/dd-wrt-logo.png" width="40%" />
+        <img src="img/rtl-sdr-logo.png" width="40%" />
+        <div class="notes"><pre>
+
+        Actually, there are a great many possibilities for data collection the
+        RF spectrum.  Everyone knows that there are a great many transmission,
+        from AM/FM radio to line-of-sight microwave that fill the air.  In the
+        past, receiving most of these signals has meant having to design an
+        analog circuit carefully designed to pick out and demodulate the
+        frequency of interest.  Now more often than not, we can use radios
+        which have a lot of configurability, and in some cases are fully
+        programmable.
+
+        The demo I showed you used DD-WRT, the open source firmware for
+        routers. You can also use it to modify your WiFi's power-levels, used
+        it as part of a mesh network, bridge and so forth.
+
+        The RTL-SDR project used a DVB-T chipset from RealTek -- these were
+        meant to go into set-top boxes and then somehow managed to figure out
+        how to get access oto the intermediate frequency signals. This allows
+        it to be used in a variety of ways -- from sniffing GSM signals to
+        listing for the ISS.  The great thing about teh RTL SDR is that you
+        can pick one up for about $15 or so.  The next price point, in the
+        world of SDRs, is $500.
 
         </pre></div>
     </div>
