@@ -183,7 +183,24 @@ font-family: 'Hind Siliguri', sans-serif; -->
         Using classic `id`-based links like `#step-2` makes these links usable also in fallback mode.
         
     -->
-    <div id="start" class="step"  data-x="0" data-y="-1500">
+    <div id="start" class="step title_slide"  data-x="-1300" data-y="-1500">
+    <div style="position:absolute;left:50%;top:0%;color:black;">
+        <h1 class="font1" style="font-size: 75px;margin-top: 100px;margin-bottom:50px; margin-left:7px">
+            Adding to the Mess
+        </h1>
+        <h4 class="font2" style="font-size:40px;margin-right:5px;margin-left:7px;color:#a0a0a0;">
+            The IoT Data Firehose and How to Stop Worrying About It
+        </h4>
+
+        <p class="font3" style="font-size:32px; color:black; margin-top:75px;margin-left:7px;">Harikrishna R (<a href="mailto:harik@klarsys.com">harik@klarsys.com</a>)</p>
+        <div style="margin-top:83px">
+            <img  width="20%" style="position:absolute;left:33%;" src="img/klar-logo.png" />
+            <p style="color: black; margin-top: 107px;position:absolute; font-size: 17px; right: 230px;">Klar Systems Private Limited</p>
+        </div>
+    </div>
+    </div>
+
+    <div  class="step"  data-x="0" data-y="-1500">
         <h1 class="font1" style="font-size:96px; color:white;">Adding to the Mess</h1>
         <h4 class="font2" style="font-size:55px; color:#e0e0e0;">The IoT Data Firehose and How to Stop Worrying About It</h4>
         <div style="margin-top:30px">
@@ -1255,12 +1272,14 @@ http://www.ifm.com/ifmus/web/application-story-vision.htm
         </ul>
         <div class="notes"><pre>
 
-        [Show demo first]
-        This is a regular wi-fi router.  But it is running custom firmware.
-        And it is able to tell me how many phones are there in this room.
-        Well not quite.  It gives me a list of unique MAC addresses. [explain]
-
-        People use this to track crowds.  I even found a company that implemented an attendance system based on this.
+        People use this to track crowds.  I even found a company that
+        implemented an attendance system based on this.  I mean thik obout the
+        possibilities here.  You can implement web-site style analytics for a
+        retail store.  You can count the numbe rof people who came in, how
+        much time each one spent there, whether any are repeat customers, ...
+        Again there'll be a fair bit of inaccuracy.  Many peopel turn wifi
+        off, some carry two phone and so on.  But it wil hard to argue that
+        this data is without value.
 
         </pre></div>
     </div>
@@ -1276,14 +1295,14 @@ http://www.ifm.com/ifmus/web/application-story-vision.htm
         <img src="img/rtl-sdr-logo.png" width="40%" />
         <div class="notes"><pre>
 
-        Actually, there are a great many possibilities for data collection the
-        RF spectrum.  Everyone knows that there are a great many transmission,
-        from AM/FM radio to line-of-sight microwave that fill the air.  In the
-        past, receiving most of these signals has meant having to design an
-        analog circuit carefully designed to pick out and demodulate the
-        frequency of interest.  Now more often than not, we can use radios
-        which have a lot of configurability, and in some cases are fully
-        programmable.
+        Actually, there are a great many possibilities for data collection in
+        the RF spectrum.  Everyone knows that there are all sorts of RF
+        transmissions around us, from AM/FM radio to line-of-sight microwave
+        that fill the air.  In the past, receiving most of these signals has
+        meant having to design an analog circuit carefully designed to pick
+        out and demodulate the frequency of interest.  Now more often than
+        not, we can use radios which have a lot of configurability, and in
+        some cases are fully programmable.
 
         The demo I showed you used DD-WRT, the open source firmware for
         routers. You can also use it to modify your WiFi's power-levels, used

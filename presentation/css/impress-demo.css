@@ -214,6 +214,32 @@ a:focus {
     height: 700px;
     padding: 40px 60px;
 
+    background-image: url("../img/slide-bg.png");
+    background-position: -253px 1px;
+    background-repeat: no-repeat;
+
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+
+    color: rgb(102, 102, 102);
+    text-shadow: 0 2px 2px rgba(0, 0, 0, .1);
+
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 30px;
+    line-height: 36px;
+    letter-spacing: -1px;
+}
+
+.title_slide {
+    display: block;
+
+    width: 1152px;
+    height: 648px;
+    padding: 40px 60px;
+
+    background-image: url("../img/title-slide-bg.png");
     background-color: white;
     border: 1px solid rgba(0, 0, 0, .3);
     border-radius: 10px;
@@ -252,7 +278,7 @@ a:focus {
 .heading {
     font-size:96px; 
     color:#0e0e0e;
-    margin-bottom:50px;
+    margin-bottom:60px;
 }
 .list {
     font-size:45px; 
