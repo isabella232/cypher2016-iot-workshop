@@ -1,0 +1,1387 @@
+<!doctype html>
+
+<!--
+
+    Welcome to the light side of the source, young padawan.
+
+    One step closer to learn something interesting you are...
+
+                               ____                  
+                            _.' :  `._               
+                        .-.'`.  ;   .'`.-.           
+               __      / : ___\ ;  /___ ; \      __  
+             ,'_ ""=-.:__;".-.";: :".-.":__;.-="" _`,
+             :' `.t""=-.. '<@.`;_  ',@:` ..-=""j.' `;
+                  `:-.._J '-.-'L__ `-.-' L_..-;'     
+                    "-.__ ;  .-"  "-.  : __.-"       
+                        L ' /.======.\ ' J           
+                         "-.   "__"   .-"            
+                        __.l"-:_JL_;-";.__           
+                     .-j/'.;  ;""""  / .'\"-.        
+                   .' /:`. "-.:     .-" .';  `.      
+                .-"  / ;  "-. "-..-" .-"  :    "-.   
+             .+"-.  : :      "-.__.-"      ;-._   \  
+             ; \  `.; ;                    : : "+. ; 
+             :  ;   ; ;                    : ;  : \: 
+             ;  :   ; :                    ;:   ;  : 
+            : \  ;  :  ;                  : ;  /  :: 
+            ;  ; :   ; :                  ;   :   ;: 
+            :  :  ;  :  ;                : :  ;  : ; 
+            ;\    :   ; :                ; ;     ; ; 
+            : `."-;   :  ;              :  ;    /  ; 
+             ;    -:   ; :              ;  : .-"   : 
+             :\     \  :  ;            : \.-"      : 
+              ;`.    \  ; :            ;.'_..-=  / ; 
+              :  "-.  "-:  ;          :/."      .'  :
+               \         \ :          ;/  __        :
+                \       .-`.\        /t-""  ":-+.   :
+                 `.  .-"    `l    __/ /`. :  ; ; \  ;
+                   \   .-" .-"-.-"  .' .'j \  /   ;/ 
+                    \ / .-"   /.     .'.' ;_:'    ;  
+                     :-""-.`./-.'     /    `.___.'   
+                           \ `t  ._  /               
+                            "-.t-._:'                
+
+-->
+
+<!--
+    
+    So you'd like to know how to use impress.js?
+    
+    You've made the first, very important step - you're reading the source code.
+    And that's how impress.js presentations are built - with HTML and CSS code.
+    
+    Believe me, you need quite decent HTML and CSS skills to be able to use impress.js effectively.
+    More importantly, you need to be a designer. There are no default styles or layouts for impress.js presentations.
+    
+    You need to design and build it by hand.
+    
+    So...
+    
+    Would you still like to know how to use impress.js?
+    
+-->
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Adding to the Mess: The IoT Data Firehose and How to Stop Worrying About It | Harikrishna R (harik@klarsys.com)</title>
+    
+    <meta name="description" content="Talk delivered at Cypher 2016" />
+    <meta name="author" content="Harikrishna R" />
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Acme|Fredoka+One|Hind+Siliguri" rel="stylesheet">
+    <!--
+    font-family: 'Acme', sans-serif;
+font-family: 'Fredoka One', cursive;
+font-family: 'Hind Siliguri', sans-serif; -->
+    <!--
+        
+        Impress.js doesn't depend on any external stylesheets. It adds all of the styles it needs for the
+        presentation to work.
+        
+        This style below contains styles only for demo presentation. Browse it to see how impress.js
+        classes are used to style presentation steps, or how to apply fallback styles, but I don't want
+        you to use them directly in your presentation.
+        
+        Be creative, build your own. We don't really want all impress.js presentations to look the same,
+        do we?
+        
+        When creating your own presentation get rid of this file. Start from scratch, it's fun!
+        
+    -->
+    <link href="css/impress-demo.css" rel="stylesheet" />
+    
+    <link rel="shortcut icon" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+
+<!--
+    
+    Body element is used by impress.js to set some useful class names, that will allow you to detect
+    the support and state of the presentation in CSS or other scripts.
+    
+    First very useful class name is `impress-not-supported`. This class means, that browser doesn't
+    support features required by impress.js, so you should apply some fallback styles in your CSS.
+    It's not necessary to add it manually on this element. If the script detects that browser is not
+    good enough it will add this class, but keeping it in HTML means that users without JavaScript
+    will also get fallback styles.
+    
+    When impress.js script detects that browser supports all required features, this class name will
+    be removed.
+    
+    The class name on body element also depends on currently active presentation step. More details about
+    it can be found later, when `hint` element is being described.
+    
+-->
+<body class="impress-not-supported">
+
+<!--
+    For example this fallback message is only visible when there is `impress-not-supported` class on body.
+-->
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<!--
+    
+    Now that's the core element used by impress.js.
+    
+    That's the wrapper for your presentation steps. In this element all the impress.js magic happens.
+    It doesn't have to be a `<div>`. Only `id` is important here as that's how the script find it.
+    
+    You probably won't need it now, but there are some configuration options that can be set on this element.
+    
+    To change the duration of the transition between slides use `data-transition-duration="2000"` giving it
+    a number of ms. It defaults to 1000 (1s).
+    
+    You can also control the perspective with `data-perspective="500"` giving it a number of pixels.
+    It defaults to 1000. You can set it to 0 if you don't want any 3D effects.
+    If you are willing to change this value make sure you understand how CSS perspective works:
+    https://developer.mozilla.org/en/CSS/perspective
+    
+    But as I said, you won't need it for now, so don't worry - there are some simple but interesting things
+    right around the corner of this tag ;)
+    
+-->
+<div id="impress">
+
+    <!--
+        
+        Here is where interesting thing start to happen.
+        
+        Each step of the presentation should be an element inside the `#impress` with a class name
+        of `step`. These step elements are positioned, rotated and scaled by impress.js, and
+        the 'camera' shows them on each step of the presentation.
+        
+        Positioning information is passed through data attributes.
+        
+        In the example below we only specify x and y position of the step element with `data-x="-1000"`
+        and `data-y="-1500"` attributes. This means that **the center** of the element (yes, the center)
+        will be positioned in point x = -1000px and y = -1500px of the presentation 'canvas'.
+        
+        It will not be rotated or scaled.
+        
+    -->
+
+    <!--
+        
+        The `id` attribute of the step element is used to identify it in the URL, but it's optional.
+        If it is not defined, it will get a default value of `step-N` where N is a number of slide.
+        
+        So in the example below it'll be `step-2`.
+        
+        The hash part of the url when this step is active will be `#/step-2`.
+        
+        You can also use `#step-2` in a link, to point directly to this particular step.
+        
+        Please note, that while `#/step-2` (with slash) would also work in a link it's not recommended.
+        Using classic `id`-based links like `#step-2` makes these links usable also in fallback mode.
+        
+    -->
+    <div id="start" class="step"  data-x="0" data-y="-1500">
+        <h1 class="font1" style="font-size:96px; color:white;">Adding to the Mess</h1>
+        <h4 class="font2" style="font-size:55px; color:#e0e0e0;">The IoT Data Firehose and How to Stop Worrying About It</h4>
+        <div style="margin-top:30px">
+            <img style="width: 37%; background: white;" src="img/jigsaw-logo.jpg" />
+            <img  style="position:absolute;width: 20%; right: 200px;" src="img/klar-logo.png" />
+            <p style="color: white; margin-top: 20px;position:absolute; font-size: 20px; right: 150px;">Klar Systems Private Limited</p>
+        </div>
+        <p class="font3" style="font-size:32px; color:white; margin-top:100px">Harikrishna R (<a href="mailto:harik@klarsys.com">harik@klarsys.com</a>)</p>
+
+        <div class="notes"><pre>        
+        Hi!  The topic is a little over the top, right? Way over the top.
+        Well, my other choices were "Sensor Fusion and COnfusion" --  that
+        sounded too confusing.  And the other one I had was "Dirty Data and
+        Why that's the only kind your're gonna get" -- too pessimistic.
+        "Adding to the mess"  sounded more up beat in comparison.
+
+        [Switch to video mon]
+          [Poll here?]
+          [How many of you think IoT is over hyped?]
+          [- Can you all hold up your phones, please]
+          [How many of you think my topic today is over hyped?]
+          [Can all of you hold up you phone]
+
+        </pre></div>
+
+    </div>
+
+    <div class="step slide" data-x="1000" data-y="-1500">
+        <h1 class="font1 heading">About Me</h1>
+        <ul class="font2 list">
+            <li> Embedded Systems Engineer
+             <ul class="font2 list">
+                    <li> Audio System
+                    <li> Also imaging, video, uC firmware...
+             </ul>
+             <li> Fond of boxes with blinking lights
+             <li> Started a company to build a few
+        </ul>
+        <div class="notes"><pre>        
+        My name is Harikrishna.  I'm an embedded systems engineer.  My
+        background is in audio systems -- music, compression/decompression,
+        enhancement, that sort of thing -- but I've also done some imaging
+        stuff and a little bit of video analytics.  In the last two years, I
+        have been running my own firm, Klar Systems, along with a two of my
+        friends and co-founders.  We build IoT products, create frameworks for
+        IoT, and we're also helping Jigsaw Academy create an introductory
+        course on IoT.
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="3000" data-y="-2500" data-rotate-x="-45">
+        <h1 class="font1 heading">Moore's Law</h1>
+        <img src="img/moores_law.png" height="80%" />
+        <p>Image source: <a href="https://en.wikipedia.org/wiki/Moore%27s_law">Wikipedia</a>        </p>
+        <div class="notes"><pre>        
+        
+        In the years that I spent at Texas Instruments, for the most part, as
+        an APplications Engineer, I saw IoT evolve and take shape.  What I saw
+        was chips get cheaper, more powerful and less power hungry with each
+        generation, following Moore's Law.  Now, everyone has heard about
+        Moore's Law and people mostly imagined it as being
+        applicable to chips that power PCs and Laptop -- you know --
+        Intel, AMD and maybe other server class chips and super computers and so forth.
+
+        But that's not the only thing that was going on.  When I started my
+        careed at Texas Instruments, they were already the world leaders in
+        Digital Signal Processors and the fastest one we had back then -- this
+        is the year 2000 -- ran at a 150 MHz and could do 2 32-bit MAC every
+        cycle.  By 2006, these things were running at 1 GHz+ and doing 4
+        64-bit MAC MAC.  So at at raw level, you'd gotten a 80 times speed up
+        in 6 years!
+
+        There is a point on this graph, maybe around 2000 at which mass
+        adoption of smartphones became inevitable.  I mean we didn't know
+        about skype or instagram or whatapp -- we had no way to figure out
+        what people would do with all this compting power in their pocket.  In
+        fact, most people who thought about it felt it would mostly be used by
+        business executive types -- who needed to go do a lot of meetings and
+        wouldn't want to lug a laptop.  They were wrong.  In two ways.  Most
+        people buying smartphones are regular guys who want to browse and
+        whatsapp and play games.  And business executives continue to lug
+        their laptops in and out of each meeting. Anyway my point is it was
+        not just Intel processors that got faster due to Moore's Law.  It was
+        all processors. And when the processers that powered your phone passed
+        a certain threshold, those phones became smart phones.
+
+        </pre></div>
+    </div>
+
+
+    <div class="step slide" data-x="4000" data-y="-2500" data-rotate-x="-45">
+        <h1 class="font1 heading">Microcontrollers</h1>
+        <p class="font2">... are everywhere!</p>
+        <div>
+        <img src="img/wg_ac.jpg" width="20%" style="position:absolute;left:10%;top:30%;">
+        <img src="img/wg_dishwasher.jpg" width="15%" style="position:absolute;left:40%;top:20%;">
+        <img src="img/wg_heater.jpg" width="15%" style="position:absolute;left:10%;top:65%;">
+        <img src="img/wg_washing_mc.jpg" width="15%" style="position:absolute;left:70%;top:70%;">
+        <img src="img/wg_microwave.jpg" width="25%" style="position:absolute;left:40%;top:70%;">
+        <img src="img/wg_fridge.jpg" width="15%" style="position:absolute;left:70%;top:30%;">
+
+                <img src="img/wg_uc.jpg" width="20%" style="position:absolute;left:40%;top:40%;"/>
+        </div>
+        <div class="notes"><pre>        
+        
+        Today that same process is making microcontrollerS faster and more
+        powerful.  And microcontrollers are ever where.  Already.  Today.
+        They are in pretty much every equipment around you.  From
+        refregirators, microwave ovens, dishwashers, washing machines,
+        elevators, gensets, weighing machines, electronic safes, ... I mean we
+        are surrounded by microcontrolers.  FOr the most part, these have been
+        quiet workhorses -- substituting custom circuitry with more flexible
+        and cheaper programmable designs.  And now microcontrollers are on the
+        verge of crossing a threshold in terms of their capabilities.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="2000" data-y="-1500" data-rotate="-90" data-rotate-y="45" >
+        <h1 class="font1 heading" style="font-size:80px;">Ubiquitous Connectivity</h1>
+        <div>
+            <style>
+             .connectivity_box {
+                position:absolute;
+                width:18%;
+                height:90px;
+                top:85%;
+                left:0%;
+                background:#493382;
+                box-shadow: 10px 10px 5px #5e42a6;
+                color: white;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 90px;
+             }
+            </style>
+            <div class="connectivity_box" style="left: 7%;top:75%;">
+              NFC 
+            </div>
+            <div class="connectivity_box" style="left: 17%;top:60%;">
+              Bluetooth 
+            </div>
+            <div class="connectivity_box" style="left: 27%;top:45%;">
+              ZigBee 
+            </div>
+            <div class="connectivity_box" style="font-size:50%;left: 57%;top:30%;">
+              Mobile (2.5G/3G/4G) 
+            </div>
+            <div class="connectivity_box" style="font-size:50%;left: 37%;top:20%;">
+              Wired Broadband 
+            </div>
+            <div class="connectivity_box" style="left: 27%;top:75%;">
+              LoRa 
+            </div>
+            <div class="connectivity_box" style="left: 57%;top:55%;">
+              Satellite 
+            </div>
+            <div style="position:absolute;left:-90px;top:45%;transform:rotate(-90deg)">Increasing Bandwidth &rarr;</div>
+            <div style="position:absolute;left:40%;top:90%;">Increasing Power &rarr;</div>
+              <!-- Bluetooth WiFi ZigBee Mobile Wired Broadband LoRa Satellite -->      
+        </div>
+        <div class="notes"><pre>        
+        
+        The second trend driving IoT is connectivity.  Broadband adoption, the
+        worldwide availability of 3G and 4G wireless data, cheaper, smarter,
+        networking equipment -- many of us are running home networks that are
+        more complex than what some small companies had 15-20 years back --
+        with routers, repeaters and bridges. And this is being augmented by
+        other wireless technologies from NFS and Bluetooth to LoRa and other
+        innvotive uses of the radio spectrum.  Basically, there is a solution
+        at every feasible intersection of power vs bandwidth vs range.  And
+        connectivity continues to become more cheaper and pervasive.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="5000" data-y="-1500" data-rotate="90" data-rotate-y="-45" >
+        <h1 class="font1 heading">Sensors</h1>
+        <style>
+        blockquote {
+          background: #f9f9f9;
+          border-left: 10px solid #ccc;
+          margin: 1.5em 10px;
+          padding: 0.5em 10px;
+          quotes: "\201C""\201D""\2018""\2019";
+        }
+        blockquote:before {
+          color: #ccc;
+          content: open-quote;
+          font-size: 4em;
+          line-height: 0.1em;
+          margin-right: 0.25em;
+          vertical-align: -0.4em;
+        }
+        blockquote p {
+          display: inline;
+        }
+        blockquote footer cite {
+            float: right;
+        }
+        </style>
+        <blockquote>
+        <p>The Internet of Things and Sensors and Actuators!</p>
+        <footer>
+            &nbsp;<cite>- <a href="https://www.usenix.org/conference/lisa12/internet-things-and-sensors-and-actuators">Vincent Cerf</a></cite>
+            </footer>
+        </blockquote>
+        <ul class="font2 list">
+            <li> Digitization </li>
+            <li> Miniaturization and Modularization </li>
+            <li> MEMS technology</li>
+        </ul>
+
+        <div class="notes"><pre>        
+        
+        Finally, you have sensors.  To me this is hugely significant.  Vint
+        Cerf, the “Father of the Internet,” called IoT the "internet of
+        sensors". And in a way, the central point of my talk today is about
+        this trend.  This is actually a interlinked set of little noticed
+        trends.  First: pretty much anything you may want to measure, can now
+        be measured digitally.  Weight - now you have digital scales.
+        Temperature -- we have digital thermometers.  Pressure, humidity --
+        same thing.  And also for a a bunch of things we couldn't have meaured
+        before -- accelaration, proximity, pedometer, not to CMOS sensors for
+        imaging.  Even the traditional sensors we have known -- mics, imaging
+        sensors, have gotten a lot smaller and a lot cheapers.  This is made
+        possile by a variety of advances, mostly in semi-conductor
+        technologies -- things like MEMS. An average smarthone today has a
+        dozen sensors.  And partly as a result - we'll consume more than one
+        and half a billion smartphones this year -- they have all gotten
+        cheaper. In some cases 100X cheaper in the last 10 years.
+
+        </pre></div>
+    </div>
+    <div class="step slide" data-x="3500" data-y="-1500" data-scale="1" data-z="2500">
+        <h1 class="font1 heading">IoT: Why Now?</h1>
+        <blockquote>
+        <p>50 billion connected devices by 2020</p>
+        <footer>
+            &nbsp;<cite>- Cisco</cite>
+            </footer>
+        </blockquote>
+
+        <blockquote>
+        <p>28 billion connected devices by 2021</p>
+        <footer>
+            &nbsp;<cite>- Gartner</cite>
+            </footer>
+        </blockquote>
+
+        <blockquote>
+        <p>26 billion connected devices by 2020</p>
+        <footer>
+            &nbsp;<cite>- Gartner</cite>
+            </footer>
+        </blockquote>
+        <p class="font2">Right now we're already at 15 billion connected devices.</p>
+
+        <div class="notes"><pre>        
+        
+        So these things are all happening -- and you can look at these trends
+        and make the projections. It's quite easy.  The 20 billion connected
+        devices that we're going to have is not so much unbelieveble as
+        inevitable.
+
+        [How many think IoT is going to be big "in the near future"?]
+
+        The problem is we have no way of knowing what these devices are going
+        to be doing. Anymore than someone could have foreseen the various uses
+        we find for our smartphones.  And I think the reason most people think
+        that IoT is overhyped is because of this gap in our ability to forsee.
+
+        [How many think IoT is overhyped?]
+
+        I'm not saying IoT is not hyped. Of course it is -- and some very
+        crazy predictions are being made that will be way off the mark.  But,
+        it hard to see that we'll stop here. The trends underlying this
+        phenomenon are secure.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="7000" data-y="-1500">
+        <h1 class="font1 heading" style="font-size:90px">Top-Down Prognoses</h1>
+        <style>
+        .rlist {
+            font-style: italic; 
+            font-size: 70%;
+        }
+        .rlist:before {
+            content: ' '; display: block;
+        }
+        </style>
+        <ul class="font2 list">
+        <li> "Smart" <u>thingy</u>: <span class="rlist">Toaster? Toilet? Teaspoon?</span>
+        <li> "Connected" <u>thingamajig</u>: <span class="rlist">Car? Home? Cities?</span>
+        <li> "Wearable" <u>thingummy</u>: <span class="rlist">Fitness? Tracking? Medical condition?</span>
+        </li>
+        <div class="notes"><pre> 
+
+
+        A lot of peopel to fill this gap in our understanding will often look
+        from the top-down.  Look at some big problem we're facing -- I don't
+        know -- in health care or maybe smart cities or perhaps traditional
+        industries like retail - and try to see how these devies can be used
+        in that context.  This is a valid approach -- but prolematic, Because
+        you can't be specific.
+
+        I don't mean to play the cynic hear.  I'm just saying, these exercises
+        in imagination are good for developing your imagination.  They are
+        unlikely to predict outcomes. How a society adopts a particular
+        technology is a complex non-linear path.
+
+        Instead, what I prefer to do is look at it from the bottom up.  I look
+        at the the possibilities that are opeing up -- as they are opening up
+        -- and try and understand those technological capabilities that we can
+        bring to bear on a problem.  i.e., focus on the toolkit, and when do
+        encounter a problem, you can pull out the most appropriat etool from
+        your tool kit.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="8000" data-y="-1500">
+        <h1 class="font1 heading" style="font-size:90px">Phone Vote Demo</h1>
+        <style>
+            .io_box {
+                position:absolute;
+                width:22%;
+                height:110px;
+                top:45%;
+                background:#493382;
+                box-shadow: 10px 10px 5px #5e42a6;
+                color: white;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 110px;
+            }
+            .process_box {
+                position:absolute;
+                width:30%;
+                height:220px;
+                top:37%;
+                left: 36%;
+                background: white;
+                border: 2px solid black;
+                box-shadow: 10px 10px 5px #493382;
+                color: #5e42a6;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 220px;
+            }
+            .arrow {
+                position:absolute;
+                top:37%;
+                width:5%;
+                height:220px;
+                color: black;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 220px;
+                font-weight: bold;
+                font-size: 61px;
+            }
+        </style>
+        <div>
+        <div class="io_box" style="left:5%;">Camera Input</div>
+        <div class="arrow" style="left:29%;">&rarr;</div>
+        <div class="process_box">Process Video</div>
+        <div class="arrow" style="left:68%;">&rarr;</div>
+        <div class="io_box" style="left:75%;">Count</div>
+        </div>
+        <div class="notes"><pre> 
+
+
+        And I prefer concrete examples to vague abstractions.  So that's why I
+        did this demo (even though it doesn't work very well...).  And I
+        thought: why don't I explain how this works.
+
+        If you get nothing else out of this workshop: you'll get at least a
+        sense of how this sort of problem can be approached. And hopefully it
+        adds to your tool kit. Maybe not directly, may be it does so by
+        leading you in some related directions... I don't know.  In any case,
+        it gets you closer on the path of adding to this technological
+        progress, rather than merely watching or, worse, participating in the
+        hype cycle.
+
+        [So how many of you think that this is a complex algo?]
+
+        OK, so let's open the hood.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="8000" data-y="-1550" data-scale="0.1">
+        <h1 class="font1 heading" style="font-size:90px">Under the Hood</h1>
+        <style>
+            .io_frame {
+                position:absolute;
+                width:9%;
+                height:110px;
+                top:45%;
+                background:#493382;
+                box-shadow: 10px 10px 5px #5e42a6;
+                color: white;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 110px;
+            }
+            .process_step {
+                position:absolute;
+                width:7%;
+                height:220px;
+                top:37%;
+                background: white;
+                border: 2px solid black;
+                box-shadow: 10px 10px 5px #493382;
+                color: #5e42a6;
+                text-align: center;
+                vertical-align: center;
+                line-height: 220px;
+            }
+            .arrow_small {
+                position:absolute;
+                top:37%;
+                width:3%;
+                height:220px;
+                color: black;
+                text-align: center;
+                vertical-align: middle;
+                line-height: 220px;
+                font-weight: bold;
+                font-size: 35px;
+            }
+            .box_text {
+                position: relative;
+                top: 22%;
+                transform-origin: center center 0;
+                transform: rotate(-90deg);
+            }
+        </style>
+        <div>
+        <div class="io_frame" style="left:3%;">Image</div>
+        <div class="arrow_small" style="left:13%;">&rarr;</div>
+        <div class="process_step"  style="left:17%;"><div class="box_text">Grayscale</div></div>
+        <div class="arrow_small" style="left:25%;">&rarr;</div>
+        <div class="process_step"   style="left:29%;"><div class="box_text">Contrast</div></div>
+        <div class="arrow_small" style="left:37%;">&rarr;</div>
+
+        <div class="process_step" style="left:41%;"><div class="box_text">Thresholding</div></div>
+        <div class="arrow_small" style="left:49%;">&rarr;</div>
+        <div class="process_step"  style="left:53%;"><div class="box_text">Hysteresis</div></div>
+        <div class="arrow_small" style="left:61%;">&rarr;</div>
+        <div class="process_step" style="left:65%;"><div class="box_text">Segmentation</div></div>
+        <div class="arrow_small" style="left:72%;">&rarr;</div>
+        <div class="process_step" style="left:76%;"><div class="box_text">Count</div></div>
+        </div>
+        <div class="notes"><pre> 
+
+        Yeah it's actually quite simple.  Six steps.  Each one fairly basic.
+        Let's begin at the beginning.  The camera I have here is a Logitech
+        [FIXME]. Megapixel webcam.  Not very expensive -- not cheap stuff
+        either.  About 1500 rupees  or so.  Hunt for a deal this Diwali -- I
+        hear our favorite online retail giants are gearing up for battle this
+        season --  you may get something like it under 1000, I think.
+
+        </pre></div>
+    </div>
+    <div class="step slide" data-x="7965" data-y="-1545" data-scale="0.001">
+        <style>
+            .image_rep th {
+                text-align: center;
+                vertical-align: middle;
+                font-weight: bold;
+            }
+            .image_rep td {
+                border: 1px solid black;
+                text-align: center;
+                vertical-align: middle;
+                background-color:  #fff;
+                width: 70px;
+                height: 64px;
+            }
+        </style>
+        <script>
+        setInterval(function () {
+            var table = document.getElementById("image_rep");
+            var c = 0, rgb = []
+            for (var i = 0, row; row = table.rows[i]; i++) {
+               for (var j = 0, col; col = row.cells[j]; j++) {
+                    if (col.tagName != 'TD' || col.rowSpan != 1 || col.colSpan != 1)
+                        continue;
+                    var color = '#'; // hexadecimal starting symbol
+                    var letters = 'acc7dc d6dde3 8ac5c3 ff9681 c06c84 eeebdc e2d4d4 231f20 c8b7a7 bfb1d5 f0e0a2 403d50 ddf1e8 93642e f4858e bfe2ca d0e2ec 51a1c4'.split(' ');
+                    color += letters[Math.floor(Math.random() * letters.length)];
+                    col.style.background = color;
+                    if (c++ == 15) {
+                        rgb[0] = color.substring(1, 3);
+                        rgb[1] = color.substring(3, 5);
+                        rgb[2] = color.substring(5, 7);
+                    }
+               }  
+            }
+            table = document.getElementById("pixel_rep");
+            table.rows[0].cells[0].style.background = '#'+rgb[0]+rgb[1]+rgb[2];
+            table.rows[1].cells[0].style.background = '#'+rgb[0]+'0000';
+            table.rows[1].cells[1].style.background = '#00'+rgb[1]+'00';
+            table.rows[1].cells[2].style.background = '#0000'+rgb[2];
+            document.getElementById("r_val").innerText = parseInt(rgb[0], 16);
+            document.getElementById("g_val").innerText = parseInt(rgb[1], 16);
+            document.getElementById("b_val").innerText = parseInt(rgb[2], 16);
+        }, 2000);
+        </script>
+        <h1 class="font1 heading">HD Image</h1>
+        <div>
+            <table id="image_rep" class="image_rep">
+            <tr><th></th><th></th><th colspan="10">Columns</th></tr>
+            <tr><th></th><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th colspan="4">...</th><th>1278</th><th>1279</th></tr>
+            <tr><th rowspan="10" style="transform:rotate(-90deg);">Rows</th><th>0</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><th>1</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><th>2</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><th>3</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><th rowspan="4">...</th><td rowspan="4" colspan="10">&nbsp;&nbsp;&nbsp;&nbsp;...</td></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr></tr>
+            <tr><th>718</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr><th>719</th>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan="4">...</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            </table>
+            <p>1280 columns * 720 rows &rarr; 921600 pixels/image</p>
+        </div>
+        <div class="notes"><pre> 
+
+        What this gives me is a 1280x720 image at upto 30 FPS, so called 720p video.
+        Now that sounds impressive.  But those of you who are photograhy
+        enthusiasts or have tried to comparison shop for mid- to high-end
+        cameras, you guys would have figured out very quickky that image
+        quality is not about the pixel count.  It depends of very many things
+        -- the optics, the size of the sensor, the type of image
+        stabilization, and so forth.  And in the grand scheme of things, what
+        we have here is poor-man's HD image.  I mean technically it is HD, but
+        that's about it.
+
+        So this is what we get: 1280 columns, 720 rows, and...
+
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="7965" data-y="-1545" data-scale="0.00001">
+        <h1 class="font1 heading">Pixel</h1>
+        <div style="position:absolute;left:40%;top:40%;margin-bottom:30px;">
+            <table id="pixel_rep" class="image_rep">
+            <tr><td colspan="3">Pixel</td></tr>
+            <tr><td>R=<span id="r_val"></span></td>
+                    <td>G=<span id="g_val"></span></td>
+                    <td>B=<span id="b_val"></span></td></tr>
+            </table>
+        </div>
+        <div>
+        <p>921600 pixels/image &times; 24 bits/pixel &rarr; 2.6 MB</p>
+        <p>2.6 MB @ 30 frames/second &rarr; ~600 mbps [uncompressed]</p>
+        </div>
+        <div class="notes"><pre> 
+
+        ...each pixel is a 24 bit number -- 8 bits each for the red, green and
+        blue planes.  That's a total of 2.6 MB per uncomressed image.  And at
+        30 FPS, we are looking at more than 600 mbps.  HD video stream!
+        That's a large amount of data, but in practice, when streaming over
+        the network, we compress this stream. And compression ratios of 200
+        times is often possible with h.264, especially when you have low
+        motion video.  So when you are streaming, it becomes 3-4 mbps.
+
+        </pre></div>
+    </div>
+
+    <div class="step hide" data-x="7965" data-y="-1545" data-scale="0.001">
+        <div style="background:white;display:inline-block;">
+            <p>100 cycles/pixel @ 30 fps &rarr; ~2.7 GHz</p>
+            <p> @ 3 fps &rarr; 270 MHz</p>
+            <p style="float:right;">(one frame every 333 ms)</p>
+        </div>
+        <div class="notes"><pre> 
+
+        But in our case, we want to be processing this whole image in its
+        uncompressed form. Just a few years ago this was an impossible torrent
+        of data.  If were to spend say 100 cpu cycles per pixel -- and that's
+        not hard to do -- that won't take more than 10 lines of code in a high
+        level language -- you'll end up needing 2.7 GHz.  You either need a
+        very powerful processor or some custom circuitry.  Well, fortunately
+        for us, with video there's a very simple option.  Just drop the frame
+        rate.  If you were OK with processing this stream at 3 frames per
+        second, instead of 30 -- straightaway the CPU requirement drops 10
+        fold.  But what that means is that you get only one image for 300 ms.
+        In other words, you need to hold you phone up for at least a third of
+        a second to make sure we get it.  That's not hard -- most people will
+        hold it up for a few seconds.
+
+        Even a low-end platform -- say the raspberry pi -- which has a single
+        core ARM processor running at 800 MHz can handle this quite easily.
+        We are not using a RaspPi here - we'll come to our compute platform
+        later. Just wanted to give you a sense of the problem size.
+
+        </pre></div>
+    </div>
+
+    <div class="step hide" data-x="7971" data-y="-1548" data-scale="0.025" data-rotate="-90">
+        <div style="position:absolute;top:265%;display:inline-block; color:#493382;font-size:39px">
+         <p><b>Gray = 0.2989 &times; R + 0.5870 &times; G + 0.1140 &times; B</b></p>
+        </div>
+        <div class="notes"><pre> 
+
+        OK, so we have the image. What next.  Well, we're not really
+        interested in a color image. We want to look for black phones. So
+        first thing we do, we convert it to a gray scale image.  i.e., for 24
+        bits per pixel, it drops to 8 bits per pixel.  And the process
+        involves a straightforward weighter sum of the RG abd B values.  The 8
+        bit alue we have goes from 0 to 255. 0 is perfect dark and 255 is
+        perfect bright.
+
+        </pre></div>
+    </div>
+
+    <div class="step hide" data-x="7991" data-y="-1548" data-scale="0.025" data-rotate="-90">
+        <div style="position:absolute;top:340%;display:inline-block; color:#493382;font-size:39px">
+         <p><b>Output = 1, if above <tt>threshold</tt>; 0, otherwise</b></p>
+        </div>
+        <div class="notes"><pre> 
+
+        Second, we want to threshold this image.  In other words make it a
+        binary black and white image.  Remember, we are interested only in the
+        black portions.  Now, there's a problem here.  If we looked only for
+        perfectly black pixels, we won't find many.  [Explain why].  So we
+        need to have a threshold, some number, below which we decide a pixel
+        is black.
+
+        Let's try that [process of tuning].  So we have a problem.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide hide" data-x="8010" data-y="-1565" data-scale="0.023" data-rotate="-90">
+        <h1 class="font1 heading" style="font-size: 86px;">Hyteresis Thresholding</h1>
+        <p style="font-size: 42px;margin-bottom:30px;">Set and tune two thresholds: <i>high</i> and <i>low</i></p>
+        <ul class="font2 list" style="font-size: 34px;margin-bottom:20px;">
+         <li> Pixels below <i>low</i> are marked 0 (black)</li>
+         <li> Pixels above <i>high</i> are marked 255 (not black)</li>
+         <li> Pixels between <i>low</i> and <i>high</i> are
+            <ul class="font2 list" style="font-size: 30px;">
+             <li> Marked 0 if any one of their neighbours is 0</li>
+             <li> Marked 255 otherwise</li>
+            </ul>
+        </ul>
+        <p style="font-size: 40px;margin-top:30px;color:#5e42a6;">Needs to be implemented recursively or over multiple passes. Somewhat expensive.</p>
+        <div class="notes"><pre> 
+
+        So to get past this we use a technique called hyteresis thresholding.
+        Hyteresis refers to a stateful process in which the output lags behind
+        the input.  In the context of image processing, the way this works is,
+        we have two thresholds.  One high, one low.  So what we're saying is,
+        everything below the low threshold is definitely black.  Everything
+        above the high threshold is definitely not black.  For pixels with a
+        value in between -- they are considered black provided they have at
+        least one black neighbour.
+
+
+        </pre></div>
+    </div>
+    <div class="step slide hide" data-x="8010" data-y="-1588" data-scale="0.023" data-rotate="-90">
+        <h1 class="font1 heading" style="font-size: 86px;">Hyteresis Thresholding</h1>
+        <p>Pass: <span id="pass_count"></span>
+        <table id="ht_image"></table>
+        <script>
+            var tab = document.getElementById('ht_image');
+            var pCount = document.getElementById('pass_count');
+            var pass = -1, nc = 23, nr = 14, left = 5, top = 10, bottom = 5;
+            var low = 32, high = 128;
+            for (var i = 0; i < nr; i++) {
+                var row = tab.insertRow(i);
+                for (var j = 0; j < nc; j++) {
+                    var cell = row.insertCell(j);
+                    cell.style.border = '1px solid black';
+                    cell.innerHTML  = '&nbsp;';
+                }
+            }
+            tab.style.position = 'absolute';
+            tab.style.top = top + '%';
+            tab.style.left = left + '%';
+            tab.style.width = '90%';
+            tab.style.height = '70%';
+            setInterval(function () {
+                switch (pass) {
+                case -1:
+                    for (var i = 0; r = tab.rows[i]; i++)
+                        for (var j = 0; c = r.cells[j]; j++)
+                                c.curVal = Math.floor(Math.random()*255+0.5);
+                        break;
+                case 0:
+                    for (var i = 0; r = tab.rows[i]; i++)
+                        for (var j = 0; c = r.cells[j]; j++) {
+                            if (c.curVal < low) c.curVal = 0;
+                            else if (c.curVal > high) c.curVal = 255;
+                            else c.curVal = 128;
+                        }
+                        break;
+                case -2:
+                    for (var i = 0; r = tab.rows[i]; i++)
+                        for (var j = 0; c = r.cells[j]; j++) 
+                            if (c.curVal == 128)
+                                c.curVal = 255;
+                    break;
+                default:
+                    var inc = 0;
+                    for (var i = 0; r = tab.rows[i]; i++)
+                        for (var j = 0; c = r.cells[j]; j++) {
+                            if (c.curVal != 128)
+                                continue;
+                            if (!i || !j || (i == nr -1) || (j == nc - 1))
+                                continue;
+                            if (tab.rows[i-1].cells[j-1].curVal == 0 || 
+                                tab.rows[i-1].cells[j].curVal == 0 || 
+                                tab.rows[i-1].cells[j+1].curVal == 0 ||
+                                tab.rows[i].cells[j-1].curVal == 0 || 
+                                tab.rows[i].cells[j+1].curVal == 0 || 
+                                tab.rows[i+1].cells[j-1].curVal == 0 || 
+                                tab.rows[i+1].cells[j].curVal == 0 || 
+                                tab.rows[i+1].cells[j+1].curVal == 0 ) {
+                                c.curVal = 0;
+                                ++inc;
+                            }
+                        }
+                    if (!inc)
+                        pass = -3; // Done
+                    break;
+                }
+                for (var i = 0; r = tab.rows[i]; i++)
+                    for (var j = 0; c = r.cells[j]; j++) {
+                        var x = c.curVal;
+                        c.style.background = 'rgb('+x+','+x+','+x+')';
+                    }
+                ++pass;
+                pCount.innerText = pass;
+            }, 2000);
+        </script>
+        <div class="notes"><pre> 
+
+        OK, so think about this.  You start with an image and mark all the
+        pixels.  You get a bunch of black, a bunch of not blacks, and then a
+        bunch of question marks. Pixels that lie between the threshold.  You
+        then grow the black regions by encompassing all the questionable
+        pixels nearby in a progressive manner. This is a recursive process.
+        This is a special case of a problem that arises frequently in what is
+        generally called image segmentation.  Whenever you have a picture that
+        you want to break up into different regions or objects.  There are
+        multiple different ways to go about this, but I just took a brute
+        force approach here.
+
+        So with this we get two thresholds to tweak and a little bit of
+        tweaking lets us get to a just right number.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide hide" data-x="8020" data-y="-1565" data-scale="0.023" data-rotate="-90">
+        <h1 class="font1 heading" >Find Regions</h1>
+        <ul class="font2 list">
+         <li> Find regions of interest</li>
+         <li> Eliminate based on size</li>
+         <li> Eliminate based on aspect ratio</li>
+         <li> Eliminate boxes that are part of the background</li>
+        </ul>
+        <div class="notes"><pre> 
+
+        Next we can find our regions of interest from this binary image.  I
+        used a library called tracking.js do this.   Tracking.js returns a
+        list of black boxes it found in the image.  We look at each nox and
+        eliminate candidates based on size and aspect ratio.
+
+        Finally, we ignore regions that are permanently black. You know,
+        things that are part of the background.  More enhancements are
+        possible: by this point it is all just logic on the list of boxes you
+        have.  You can smothen the counts.  Eliminate spurious boxes (those
+        that don't show up for more than 1 or 2 frames).  And so on.
+
+        Well. That's all there is to it.  [So how many still find this too
+        complex?]
+
+        Right, it does not take a Ph D or a big team to put togather something
+        like this.  Well, if you did have a lot of Ph. D. working for you, you
+        could definitely do a much, much better job. For one thing, I wouldn't
+        have had to ask you to raise your phone. I could just asked you to
+        raise you hands and done gesture recognition.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide hide" data-x="8020" data-y="-1588" data-scale="0.023" data-rotate="-90">
+        <h1 class="font1 heading" >Gesture Recognition</h1>
+        <img src="img/xkcd_ai.png">
+        <p>XKCD: <a href="http://xkcd.com/1425/">http://xkcd.com/1425/</a></p>
+        <div class="notes"><pre>
+
+        That's possible today, but requires more than just an ad hoc approach
+        we used here.  We would have needed machine learning.  Now keep in
+        mind, it is not necessarily more complex in terms of computation.
+        Just harder to conceptualize, design, configure and make into a
+        working systme.  Actually much much much more harder...
+
+        </pre></div>
+    </div>
+
+    <div class="step slide hide" data-x="8080" data-y="-1520" data-scale="0.12">
+        <h1 class="font1 heading" >Demo Platform</h1>
+        <img src="img/platform.png" width="90%" />
+        <div class="notes"><pre>
+
+        And here's the best part about this demo.
+
+        I'm doing this whole thing inside a browser.  That's right!  It is
+        100% javascript code.  You know, a few years back, I'd have been
+        embarrased to say I was coding in javascript.  And the idea that you
+        could do HD video processing in JS would have sounded hilariously
+        absurd. Yet,  here we are.
+
+        The story of how  JS moved from a toy language used to control
+        dropdown menus to one where a significant amount of backend code is
+        being done with it, would fill a talk by itself.  In short, it is
+        about a bunch of companies --chiefly google, but also yahoo, Apple -
+        who came togather with the opensource community to supercharge open
+        web technologies. And the thing that really flipped the switch for JS
+        was Google's V8 engine.  A superfast "engine" for JS. They made it
+        when they launched their chrome browser.  They wanted to make
+        interactive web applications faster. But since that time, V8 has gone
+        everywhere. It been used in the chromimum browser, of course,
+        databases such as mongoDB and couchbase, and most importantly in
+        Nodejs, which is now, in many ways, the fastest growing backend
+        technology for web apps.  Anyhow, the point is we've gotten to a stage
+        where we can do credible amounts of processing, even HD video
+        processing, right inside a browser -- on the client side.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="10000" data-y="-1500" >
+        <h1 class="font1 heading" >IoT Data Firehose</h1>
+        <p style="font-size: 45px;line-height: 56px;margin-bottom: 27px;">
+        Combining cheap sensors, microcontrollers, and connectivity will:</p>
+        <ul class="font2 list">
+            <li> Unlock a treasure trove of data</li>
+            <li> Provide data that is unlike what we see today</li>
+        </ul>
+        <div class="notes"><pre>
+
+        Anyhow, back to the topic at hand.  IoT technologies can help us
+        extract data from the real world in contexts and quantities that we do
+        not corrently expect.   I mean, think about it: when you say big data
+        today, you're mostly dealing with data that arises inside of computer
+        sustems.  You know, click streams, transations.  I don't mean to say
+        there are not other sources of data.  But with IoT you have this
+        possibility where a great deal of the information you have around you,
+        can be digitized and processed.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="11000" data-y="-1500" >
+        <h1 class="font1 heading" style="font-size: 64px;">Sensor Use and Abuse</h1>
+        <figure style="width:60%;">
+        <img src="img/cmos_sensor.jpg" width="40%" />
+         <figcaption>CMOS Sensor</figcaption>
+         </figure>
+        <figure style="width:100%;">
+        <img src="img/bayer_array.png" width="40%" />
+         <figcaption>Bayer Array</figcaption>
+         </figure>
+        <p style="margin-top:20px;font-size:20px;">By <a href="https://en.wikipedia.org/wiki/User:Cburnett" class="extiw" title="en:User:Cburnett">en:User:Cburnett</a> - <span class="int-own-work" lang="en">Own work</span><a href="//commons.wikimedia.org/wiki/File:Inkscape_Logo.svg" title="File:Inkscape Logo.svg"></a>This <a href="https://en.wikipedia.org/wiki/Vector_images" class="extiw" title="w:Vector images">vector image</a> was created with <a href="//commons.wikimedia.org/wiki/Help:Inkscape" title="Help:Inkscape">Inkscape</a>., <a href="http://creativecommons.org/licenses/by-sa/3.0/" title="Creative Commons Attribution-Share Alike 3.0">CC BY-SA 3.0</a>, <a href="https://commons.wikimedia.org/w/index.php?curid=1496858">https://commons.wikimedia.org/w/index.php?curid=1496858</a></p>
+        <div class="notes"><pre>
+
+        Now, keep in my we used a CMOS sensor for this demo.  A CMOS imaging
+        sensor is developed with a very specific applications in mind.
+        Photography and videography. Still images and video.  They are meant
+        to mimic human visual perception.  They are meant to plug in as input
+        to the awesome human vision system.  Everything about this webcam is
+        designed with the ultimate human consumption of the image in mind.
+        The pixels are designed with specific sensitivities, and placed in a
+        so called Bayer array.  The scan speed is tuned to play well ith human
+        persistence of vision and so forth.  But human vision is nothing like
+        computer vision.
+
+        </pre></div>
+    </div>
+    <div class="step slide" data-x="12000" data-y="-1500" >
+        <h1 class="font1 heading" style="font-size:64px;" >Human vs Computer Vision</h1>
+        <img width="90%" src="img/illusion.webp">
+        <p>Source: <a href="https://www.rit.edu/cla/gssp400/muller/muller.html">https://www.rit.edu</a></p>
+        <div class="notes"><pre>
+
+        We do a lot of processing in our brain, a lot of extrapolation from
+        context that gives us meaning from whatever raw data it is our retina
+        is getting from the outside world. I'm sure you've all seen multiple
+        illusions that help convince of it.  This one is my favorite.  No
+        matter how hard you look at it you can't tell they are the same size
+        right?
+
+        So my point is given that computer vision is not the same as human
+        vision, would we be better off using a sensor tuned for making
+        computer vision tasks easier?  Instead of relying on a sensor designed
+        to show pretty pictures to human eyes?
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="13000" data-y="-1500" >
+        <h1 class="font1 heading">Vision Sensors</h1>
+        <img src="img/vision_sensor1.jpg" width="40%" />
+        <img src="img/vision_sensor2.jpg" width="40%" />
+        <img src="img/vision_sensor3.jpg" width="40%" />
+        <img src="img/vision_sensor4.jpg" width="40%" />
+        <div class="notes"><pre>
+
+http://www.stemmer-imaging.co.uk/en/products/category/3d-laser-scanning-sensor/
+https://industrial.omron.us/en/products/vision-sensors-systems
+http://showcase.designnews.com/content/ivu-plus-touch-screen-vision-sensors
+http://www.ifm.com/ifmus/web/application-story-vision.htm
+        
+        Yes! The answer is a definte yes!.  You have IR sensors, xray sensors,
+        scanning sensors, all manner of stuff.  But, these sensor are useless
+        for applicaitons outside of CV -- they are not good for taking a
+        selfie -- so no mass market -- which means they are  very,very
+        expensive. Which is why most current research focuses on doing CV
+        using regular CMOS sensors.
+
+        And you can find many instances of such innvotive uses of existing
+        sensors.  Such a regular mic being used t monitor[more examples FIXME]
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="13000" data-y="-500" >
+        <h1 class="font1 heading">Traffic Sensors</h1>
+        <figure style="position:absolute;left:5%;top:20%;width:40%;">
+        <img src="img/traffic_s_install.jpg"/>
+        <figcaption>Inductive Loop</figcaption>
+        </figure>
+        <figure  style="position:absolute;left:50%;top:20%;width:40%;">
+        <img src="img/traffic_s_unit.jpg"/>
+        <figcaption>Associated Electronics</figcaption>
+        </figure>
+        <p style="position:absolute;left:5%;top:80%;font-size:20px;">Image Source: <a href="https://www.fhwa.dot.gov/publications/publicroads/07nov/04.cfm">U.S. Dept. of Transportation</a></p>
+        <div class="notes"><pre>
+
+        Let's talk about traffic sensors for a minute.  The main application
+        of these things is to help guage the amount of traffic, and the speed
+        of its movement thru secotions of the highway.  And this is how it
+        looks.
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="14000" data-y="-1500" >
+        <h1 class="font1 heading">Sensor Fusion</h1>
+        <ul class="font2 list">
+            <li>Combine data from multiple sensors</li>
+            <li>Sensors are of different types; have different failure scenarious</li>
+            <li>Errors from sensors are uncorrelated</li>
+        </ul>
+        <p>e.g., Self-driving cars use CMOS + Lidar + Radar + Ultrasonic + Infrared + ...</p>
+        <div class="notes"><pre>
+
+        So what can we do about the noise -- without increasing the cost of
+        the system. Well we can use input from another sensor.  I could have
+        used another camera, matbe placed half way up the aisle for example,
+        Or I can use some othe rdata point to validata this one. For example I
+        have this device here.
+
+        Or, I can use some other sensor.  Ideally, something that has an error
+        rate uncorrelated with the this one error rate.  This is sometimes
+        called sensor fusion. The most famous use of it is in driverless cars
+        -- which combine cmos, lidar, radar and IR.  Each of these sensors by
+        themselves have catastrophic error rates.  Put them all togather and
+        you have reasonable chance of avoiding disaster scenaroijs.
+
+        This is a regular wi-fi router.  But it is running custom firmware.
+        And it is able to tell me how many phones are there in this room.
+        Well not quite.  It gives me a list of unique MAC addresses. [explain]
+
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="15000" data-y="-1500" >
+        <h1 class="font1 heading" style="font-size:80px;">Accuracy vs. Availability</h1>
+        <div class="notes"><pre>
+
+        Time to summarize. It's wiser to seek patterns in approximate data
+        than to seek perfect data.  Smarter to build applciations on top of
+        the data you have rather than design it around teh data that you
+        really want.  The urge to seek perfect data is actually quite
+        dangerous.  I mean, think about what would happen if we were to go
+        about the traffic monitoring the same way that the US did.  Th eevel
+        of investment and the waste of resources...  And just seeking a
+        cheaper sensor is not an answer.  Even if you make it 10X cheaper,
+        you'd be paying $100s per intersection instead of $1000s.  That's all.
+        Still very expensive.  And won't buy you much. This lesson is
+        important in teh context of everything we are trying to do today for
+        smart cities and so forth.
+
+        But I'm not here to make policy recommendations.  My purpose today was
+        to help motivate some lateral thinking on data accuracy vs data
+        availability. If you think about it, availability is preferable to
+        accuracy almost every time.  Almost every time.
+
+
+        </pre></div>
+    </div>
+
+
+    <div class="step slide" data-x="16000" data-y="-1500" >
+        <h1 class="font1 heading">Fitbit</h1>
+        <div class="notes"><pre>
+
+        I was one of the early buyers of fitbit. Not because I had any
+        intention of wanting to lead a healthy life style.  But it was cool
+        technology.  This is a perfect example of what I'm talking about here.
+        I think they adapted an accelerometer that was first used in
+        Nintendo's Wii remote, and subsequently in many phones. And then
+        repurposed it to count steps.  And since then it, and the device
+        category itself have come a long way. Yet to this date, if you look at
+        amazon reviews of fit bit, or for that matter any other pedometer,
+        accuracy is still a major concern.  OK, accuracy here is not about
+        whether it is within 1% or within 10% of the actual number of steps
+        you took.  I remember once wearing it on a long drive to Chennai.  I
+        was just driving a car right?  The fit bit thought I had done
+        something like 5 or 6000 steps in the space of that 6 hour drive.
+        They have since added more sensors that try to detect if you are in a
+        moving vehicle and then correct for it and so on.  This is a tough
+        problem and things have gotten better over time.
+
+        What I find heartwarming is that an entre new product category was
+        launched on the back of some poor data from sensors designed for use
+        in a completely different context, and it has helped millions of
+        people around the world.  And I hope you'll agree with me that this
+        neededn't be the last such device.  There are many possibilities
+        around us.  Thanks you.
+
+
+        </pre></div>
+    </div>
+
+    <div class="step slide" data-x="17000" data-y="-1500" >
+        <h1 class="font1 heading">Source Code</h1>
+        <ul class="list font2">
+        <li>Github: <span style="font-size:60%;"><a href="https://github.com/klarsys/reel-poll">https://github.com/klarsys/reel-poll</a></span></li>
+        <li>Acknowledgements</li>
+        <ul class="list font2">
+            <li>Tracking.js: <span style="font-size:60%;"><a href="https://trackingjs.com/">https://trackingjs.com/</a></span></li>
+            <li>Impress.js: <span style="font-size:60%;"><a href="https://github.com/impress/impress.js">https://github.com/impress/impress.js</a></span></li>
+            <li>Angular: <span style="font-size:60%;"><a href="https://angularjs.org">https://angularjs.org</a></span></li>
+            <li>DD-WRT: <span style="font-size:60%;"><a href="http://www.dd-wrt.com/site/index">http://www.dd-wrt.com/site/index</a></span></li>
+        </ul>
+        </ul>
+        <div class="notes"><pre>
+        </pre></div>
+    </div>
+
+</div>
+
+<!--
+    
+    Hint is not related to impress.js in any way.
+    
+    But it can show you how to use impress.js features in creative way.
+    
+    When the presentation step is shown (selected) its element gets the class of "active" and the body element
+    gets the class based on active step id `impress-on-ID` (where ID is the step's id)... It may not be
+    so clear because of all these "ids" in previous sentence, so for example when the first step (the one with
+    the id of `bored`) is active, body element gets a class of `impress-on-bored`.
+    
+    This class is used by this hint below. Check CSS file to see how it's shown with delayed CSS animation when
+    the first step of presentation is visible for a couple of seconds.
+    
+    ...
+    
+    And when it comes to this piece of JavaScript below ... kids, don't do this at home ;)
+    It's just a quick and dirty workaround to get different hint text for touch devices.
+    In a real world it should be at least placed in separate JS file ... and the touch content should be
+    probably just hidden somewhere in HTML - not hard-coded in the script.
+    
+    Just sayin' ;)
+    
+-->
+<div class="hint">
+    <p>Use a spacebar or arrow keys to navigate</p>
+</div>
+<script>
+if ("ontouchstart" in document.documentElement) { 
+    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+}
+</script>
+
+<!--
+    
+    Last, but not least.
+    
+    To make all described above really work, you need to include impress.js in the page.
+    I strongly encourage to minify it first.
+    
+    In here I just include full source of the script to make it more readable.
+    
+    You also need to call a `impress().init()` function to initialize impress.js presentation.
+    And you should do it in the end of your document. Not only because it's a good practice, but also
+    because it should be done when the whole document is ready.
+    Of course you can wrap it in any kind of "DOM ready" event, but I was too lazy to do so ;)
+    
+-->
+<script src="js/impress.js"></script>
+<script src="js/impressConsole.js"></script>
+<script>
+    impress().init();
+    impressConsole().init();
+</script>
+
+<!--
+    
+    The `impress()` function also gives you access to the API that controls the presentation.
+    
+    Just store the result of the call:
+    
+        var api = impress();
+    
+    and you will get three functions you can call:
+    
+        `api.init()` - initializes the presentation,
+        `api.next()` - moves to next step of the presentation,
+        `api.prev()` - moves to previous step of the presentation,
+        `api.goto( stepIndex | stepElementId | stepElement, [duration] )` - moves the presentation to the step given by its index number
+                id or the DOM element; second parameter can be used to define duration of the transition in ms,
+                but it's optional - if not provided default transition duration for the presentation will be used.
+    
+    You can also simply call `impress()` again to get the API, so `impress().next()` is also allowed.
+    Don't worry, it wont initialize the presentation again.
+    
+    For some example uses of this API check the last part of the source of impress.js where the API
+    is used in event handlers.
+    
+-->
+
+</body>
+</html>
+
+<!--
+    
+    Now you know more or less everything you need to build your first impress.js presentation, but before
+    you start...
+    
+    Oh, you've already cloned the code from GitHub?
+    
+    You have it open in text editor?
+    
+    Stop right there!
+    
+    That's not how you create awesome presentations. This is only a code. Implementation of the idea that
+    first needs to grow in your mind.
+    
+    So if you want to build great presentation take a pencil and piece of paper. And turn off the computer.
+    
+    Sketch, draw and write. Brainstorm your ideas on a paper. Try to build a mind-map of what you'd like
+    to present. It will get you closer and closer to the layout you'll build later with impress.js.
+    
+    Get back to the code only when you have your presentation ready on a paper. It doesn't make sense to do
+    it earlier, because you'll only waste your time fighting with positioning of useless points.
+    
+    If you think I'm crazy, please put your hands on a book called "Presentation Zen". It's all about 
+    creating awesome and engaging presentations.
+    
+    Think about it. 'Cause impress.js may not help you, if you have nothing interesting to say.
+    
+-->
+
+<!--
+    
+    Are you still reading this?
+    
+    For real?
+    
+    I'm impressed! Feel free to let me know that you got that far (I'm @bartaz on Twitter), 'cause I'd like
+    to congratulate you personally :)
+    
+    But you don't have to do it now. Take my advice and take some time off. Make yourself a cup of coffee, tea,
+    or anything you like to drink. And raise a glass for me ;)
+    
+    Cheers!
+    
+-->
+

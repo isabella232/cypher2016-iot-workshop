@@ -1,0 +1,179 @@
+<!doctype html>
+<html ng-app="phone_counter">
+<head>
+  <meta charset="utf-8">
+  <title>Reel Poll: Wonky Audience Polling</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    
+  <link rel="stylesheet" type="text/css" href="../bower_components/angularjs-slider/dist/rzslider.css"/>
+  <script src="../bower_components/tracking/build/tracking.js"></script>
+
+  <script src="../bower_components/angular/angular.js"></script>
+    <script data-require="ui-bootstrap@0.5.0" data-semver="0.5.0" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="../bower_components/angularjs-slider/dist/rzslider.min.js"></script>
+  <script src="webcam.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-controller="CounterCtrl">
+ <nav class="navbar navbar-default" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+
+        <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Reel Poll</a>
+      </div>
+    
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
+      
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Preview</a></li>
+          <li><a href="../impress.js">Presentation</a></li>
+          <li><a href="#">Instructions</a></li>          
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">About</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+    <div class="row">
+    <div class="col-md-3 col-md-offset-2">
+    <h1>Count: {{engine.n}}</h1>
+    </div>
+    <div class="col-md-3 col-md-offset-1">
+    <h1>Confidence: {{engine.confidence}}%</h1>
+    </div>
+    
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+     <div ng-if="ready">
+        <h1>Webcam Input</h1>
+       <webcam  ng-show="engine.debugOpts.video" id="video" on-stream="onStream(stream)"
+              on-streaming="onSuccess()"
+              on-error="onError(err)" channel="channelParams" placeholder="'ajax-loader.gif'">
+        </webcam>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-hide="!ready || engine.debugOpts.debug == 'none'" >
+        <h1>Debug Monitor</h1>
+        <canvas id="debugCanvas" >
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div ng-show="ready && engine.debugOpts.preProc" >
+        <h1>Processed Feed</h1>
+        <canvas id="preProcCanvas" >
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-2">
+    <h3>Webcam Preview</h3>
+    <p>Display video received from webcam <i>as-is</i></p>
+    </div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-primary" ng-model="engine.debugOpts.video" uib-btn-checkbox>
+        {{engine.debugOpts.video?'Turn Off':'Turn On'}}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-2">
+    <h3>Pre-proc Preview</h3>
+    <p>Display pre-processed video</p>
+    </div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-primary" ng-model="engine.debugOpts.preProc" uib-btn-checkbox>
+        {{engine.debugOpts.preProc?'Turn Off':'Turn On'}}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-2">
+    <h3>Debug Monitor</h3>
+    <p>Choose from one of many pre-processing stages</p>
+    </div>
+    <div class="col-md-6">
+      <div class="btn-group">
+        <label class="btn btn-primary" ng-model="engine.debugOpts.debug" uib-btn-radio="'none'">Off</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.debug" uib-btn-radio="'grayscale'">Grayscale Image</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.debug" uib-btn-radio="'contrast'">With Contrast</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.debug" uib-btn-radio="'threshold'">Threshold Applied</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2 col-md-offset-2">
+    <h3>Debug Overlay</h3>
+    </div>
+    <div class="col-md-6">
+      <div class="btn-group">
+        <label class="btn btn-primary" ng-model="engine.debugOpts.overlay" uib-btn-radio="'none'">Off</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.overlay" uib-btn-radio="'lines'">Lines</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.overlay" uib-btn-radio="'blobs'">Blobs</label>
+        <label class="btn btn-primary" ng-model="engine.debugOpts.overlay" uib-btn-radio="'boxes'">Boxes</label>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="col-md-2 col-md-offset-2">
+        <h3>Contrast</h3>
+      </div>
+      <div class="col-md-4">
+        <rzslider
+           rz-slider-model="engine.contrast"
+           rz-slider-options="{floor:-255, ceil:255}"></rzslider>
+      </div>
+    </div>
+  <div class="row">
+      <div class="col-md-2 col-md-offset-2">
+        <h3>Black Threshold</h3>
+        <p>Range is the hysteresis interval.  Higher the values, the more agressively we identify "black" rectangles.</p>
+      </div>
+      <div class="col-md-4">
+        <rzslider
+           rz-slider-model="engine.threshold[0]"
+           rz-slider-high="engine.threshold[1]"
+           rz-slider-options="{floor:0, ceil:255}"></rzslider>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-2 col-md-offset-2">
+        <h3>Baseline width and height</h3>
+        <p>Expected range of the width and height (in pixels) of phone in the front. i.e., bottom of the video frame</p>
+      </div>
+      <div class="col-md-4">
+        <div class="row">
+        <div class="col-md-12">
+          <rzslider
+             rz-slider-model="engine.width[0]"
+             rz-slider-high="engine.width[1]"
+             rz-slider-options="{floor:1, ceil:128}"></rzslider>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-md-12">
+          <rzslider
+             rz-slider-model="engine.height[0]"
+             rz-slider-high="engine.height[1]"
+             rz-slider-options="{floor:1, ceil:72}"></rzslider>
+        </div>
+        </div>
+      </div>
+    </div>
+    
+</body>
+</html>

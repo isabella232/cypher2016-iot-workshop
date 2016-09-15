@@ -1,0 +1,34 @@
+{
+  "name": "cypher2016-iot-workshop",
+  "version": "1.0.0",
+  "description": "Presentation and related code used at the IoT Workshop at CYPHER2016",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klarsys/cypher2016-iot-workshop.git"
+  },
+  "keywords": [
+    "IoT",
+    "Big",
+    "Data",
+    "Sensors",
+    "Dirty",
+    "Data",
+    "Presentation",
+    "Workshop",
+    "CYPHER2016"
+  ],
+  "author": "Harikrishna R <harik@klarsys.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klarsys/cypher2016-iot-workshop/issues"
+  },
+  "homepage": "https://github.com/klarsys/cypher2016-iot-workshop#README.md",
+  "dependencies": {
+    "mosca": "^2.0.2",
+    "ssh2": "^0.5.1"
+  }
+}
