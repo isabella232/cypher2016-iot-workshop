@@ -23,10 +23,10 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
         hysteresis: true
       },
       contrast: 128,
-      threshold: [40, 70],
-      a_ratio: [1,4], // ht/wd
-      width: [10, 100],
-      height: [20, 200],
+      threshold: [70, 90],
+      a_ratio: [1,2], // ht/wd
+      width: [3, 100],
+      height: [6, 150],
       // Outputs
       n: 0,
       confidence: 100,
@@ -219,7 +219,7 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
       if (boxes && boxes.length) {
         var ctx = document.getElementById("debugCanvas").getContext("2d");
         boxes.forEach(function (r) {
-          console.log(r);
+          //console.log(r);
           ctx.beginPath();
           ctx.moveTo(r.x, r.y);
           ctx.lineTo(r.x+r.width, r.y);
@@ -233,7 +233,7 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
     }
     function findRect(boxes, box) {
       var ret;
-      for (var i = 0; i < boxes[i]; i++) {
+      for (var i = 0; boxes[i]; i++) {
         var dx = boxes[i].cx - box.cx;
         var dy = boxes[i].cy - box.cy;
         var d = Math.sqrt(dx*dx + dy*dy);
@@ -247,11 +247,11 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
     var colors = new tracking.ColorTracker(['black']);
     var cBoxes = [], bBoxes = [];
     var lastFrame, frameRate = 30;
-    var minHold = 2000, maxHold = 4000;
-    var oDist = 5, maxMiss = 3;
+    var minHold = 300, maxHold = 4000;
+    var oDist = 100, maxMiss = 3;
 
     colors.on('track', function(event) {
-      console.log("event", event.data.length);
+      //console.log("event", event.data.length);
       var t = Date.now();
       if (lastFrame) {
         var dt = t - lastFrame;
@@ -282,6 +282,7 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
           r.m = 0; // Miss count
           return r;
         });
+        console.log("filtered", rects.length);
         rects.forEach(function (r) {
           var or = findRect(bBoxes, r);
           if (or) {
@@ -290,8 +291,8 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
               r = or;
             else {
               r.c = or.c;
-              r.m = 0;
             }
+            r.m = 0;
             r.c++;
             bBoxes.push(r);
           }
@@ -300,6 +301,7 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
         rects = rects.filter(function (r) {
           return !r.bg; // Part of BG skip
         });
+        console.log("bg removed", rects.length);
 
         rects.forEach(function (r) {
           var or = findRect(cBoxes, r);
@@ -308,8 +310,8 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
               r = or;
             else {
               r.c = or.c;
-              r.m = 0;
             }
+            r.m = 0;
             r.c++;
           }
           // Check if we should treat as bg
@@ -319,6 +321,7 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
             cBoxes.push(r);
         });
       }
+        console.log("boxes and bg", cBoxes.length, bBoxes.length);
 
         bBoxes = bBoxes.filter(function (r) {
           return r.m < maxMiss;
@@ -326,9 +329,13 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
         cBoxes = cBoxes.filter(function (r) {
           return r.m < maxMiss;
         });
+        console.log("filtered boxes and bg", cBoxes.length, bBoxes.length);
         var pBoxes = cBoxes.filter(function (r) {
-          return r.c > minHold/1000*frameRate;
+          console.log("c="+r.c);
+          //return r.c > minHold/1000*frameRate;
+          return true;
         });
+        console.log("filtered pBoxes", pBoxes.length);
         paintBoxes(pBoxes, 'green');
         paintBoxes(bBoxes, 'red');
         if (pBoxes.length != engine.n) {
@@ -390,6 +397,6 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
     (function spin() {
         if (video) // Video has started
           Engine.preProcess(readFrame());
-        $timeout(spin);
+        $timeout(spin, 0);
     })();
  });
