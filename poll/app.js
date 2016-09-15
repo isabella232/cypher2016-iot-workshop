@@ -1,5 +1,6 @@
 angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
   .factory('Engine', function ($window, $rootScope, $q) {
+    var mqttClient = mqtt.connect({port: 3000});
     var engine = {
       ready: $q.when(true),
       channelParams: {
@@ -214,41 +215,131 @@ angular.module('phone_counter', ['ui.bootstrap', 'rzModule', 'webcam'])
       }
       return false;
     });
+    function paintBoxes(boxes, color) {
+      if (boxes && boxes.length) {
+        var ctx = document.getElementById("debugCanvas").getContext("2d");
+        boxes.forEach(function (r) {
+          console.log(r);
+          ctx.beginPath();
+          ctx.moveTo(r.x, r.y);
+          ctx.lineTo(r.x+r.width, r.y);
+          ctx.lineTo(r.x+r.width, r.y+r.height);
+          ctx.lineTo(r.x, r.y+r.height);
+          ctx.lineTo(r.x, r.y);
+          ctx.strokeStyle = color;
+          ctx.stroke();
+        });
+      }
+    }
+    function findRect(boxes, box) {
+      var ret;
+      for (var i = 0; i < boxes[i]; i++) {
+        var dx = boxes[i].cx - box.cx;
+        var dy = boxes[i].cy - box.cy;
+        var d = Math.sqrt(dx*dx + dy*dy);
+        if (d > oDist)
+          continue;
+        ret = boxes[i];
+        boxes.splice(i, 1);
+        return ret;
+      }
+    }
     var colors = new tracking.ColorTracker(['black']);
+    var cBoxes = [], bBoxes = [];
+    var lastFrame, frameRate = 30;
+    var minHold = 2000, maxHold = 4000;
+    var oDist = 5, maxMiss = 3;
+
     colors.on('track', function(event) {
       console.log("event", event.data.length);
+      var t = Date.now();
+      if (lastFrame) {
+        var dt = t - lastFrame;
+        frameRate = 0.9*frameRate + 0.1*(1000/dt);
+        console.log("frameRate="+frameRate);
+      }
+      lastFrame = t;
+      cBoxes.forEach(function (r) {
+        r.m++;
+      });
+      bBoxes.forEach(function (r) {
+        r.m++;
+      });
       if (event.data.length === 0) {
         // No colors were detected in this frame.
       } else {
-        var rects = event.data.filter(function(rect) {
-          //console.log(rect.x, rect.y, rect.height, rect.width, rect.color);
+        var rects = event.data.filter(function(r) {
+          //console.log(r.x, r.y, r.height, r.width, r.color);
           //return true;
-          return  !(outOfBounds(rect.width, engine.width) ||
-                outOfBounds(rect.height, engine.height) ||
-                outOfBounds(rect.height/rect.width, engine.a_ratio));
+          return  !(outOfBounds(r.width, engine.width) ||
+                outOfBounds(r.height, engine.height) ||
+                outOfBounds(r.height/r.width, engine.a_ratio));
+        }).map(function (r) {
+          r.cx = r.x + r.width/2;
+          r.cy = r.y + r.height/2;
+          r.a = r.width*r.height;
+          r.c = 0; // Seen count
+          r.m = 0; // Miss count
+          return r;
         });
-        if (rects && rects.length) {
-          var ctx = document.getElementById("debugCanvas").getContext("2d");
-          rects.forEach(function (r) {
-            console.log(r);
-            ctx.beginPath();
-            ctx.moveTo(r.x, r.y);
-            ctx.lineTo(r.x+r.width, r.y);
-            ctx.lineTo(r.x+r.width, r.y+r.height);
-            ctx.lineTo(r.x, r.y+r.height);
-            ctx.lineTo(r.x, r.y);
-            ctx.strokeStyle = getRandomColor();
-            ctx.stroke();
-          });
+        rects.forEach(function (r) {
+          var or = findRect(bBoxes, r);
+          if (or) {
+            r.bg = true;
+            if (or.a > r.a)
+              r = or;
+            else {
+              r.c = or.c;
+              r.m = 0;
+            }
+            r.c++;
+            bBoxes.push(r);
+          }
+        });
 
-        }
-        if (rects.length != engine.n) {
-          console.log("Found", event.data.length, rects.length);
-          engine.n = rects.length;
+        rects = rects.filter(function (r) {
+          return !r.bg; // Part of BG skip
+        });
+
+        rects.forEach(function (r) {
+          var or = findRect(cBoxes, r);
+          if (or) {
+            if (or.a > r.a)
+              r = or;
+            else {
+              r.c = or.c;
+              r.m = 0;
+            }
+            r.c++;
+          }
+          // Check if we should treat as bg
+          if (r.c > maxHold/1000*frameRate)
+            bBoxes.push(r);
+          else
+            cBoxes.push(r);
+        });
+      }
+
+        bBoxes = bBoxes.filter(function (r) {
+          return r.m < maxMiss;
+        });
+        cBoxes = cBoxes.filter(function (r) {
+          return r.m < maxMiss;
+        });
+        var pBoxes = cBoxes.filter(function (r) {
+          return r.c > minHold/1000*frameRate;
+        });
+        paintBoxes(pBoxes, 'green');
+        paintBoxes(bBoxes, 'red');
+        if (pBoxes.length != engine.n) {
+          console.log("Found", event.data.length, pBoxes.length);
+          engine.n = pBoxes.length;
+          mqttClient.publish("poll/count", engine.n.toString());
           $rootScope.$broadcast("count", engine.n);
         }
-      }
+
     });
+
     engine.preProcess = function (frame) {
       var img = new Image(frame);
       img//.grayscale()

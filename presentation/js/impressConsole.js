@@ -208,7 +208,14 @@
         var timerReset = function () {
             consoleWindow.timerStart = new Date();
         };
-
+        var toggleCount = function () {
+            var cEl = window.document.getElementById('displayCounter');
+            console.log("toggle count", cEl.style.display);
+            if (cEl.style.display == 'none')
+                cEl.style.display = 'block';
+            else
+                cEl.style.display = 'none';
+        };
         // Show a clock
         var clockTick = function () {
             var now = new Date();
@@ -335,6 +342,9 @@
                 registerKeyEvent([32], spaceHandler);
                 // 82: R
                 registerKeyEvent([82], timerReset);
+                // Press C
+                console.log("registering....");
+                registerKeyEvent([67], toggleCount);
 
                 // Cleanup
                 consoleWindow.onbeforeunload = function() {

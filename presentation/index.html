@@ -148,8 +148,10 @@ font-family: 'Hind Siliguri', sans-serif; -->
     right around the corner of this tag ;)
     
 -->
+    <div class="displayCounter" id="displayCounter">
+      Vote Count <div class="poll_count">0</div>
+    </div>
 <div id="impress">
-
     <!--
         
         Here is where interesting thing start to happen.
@@ -459,7 +461,6 @@ font-family: 'Hind Siliguri', sans-serif; -->
         </blockquote>
         <p class="font2">Right now we're already at 15 billion connected devices.</p>
 
-        <p class="poll">Count: <span class="poll_count"></span></p>
 
         <div class="notes"><pre>        
         
@@ -1446,9 +1447,21 @@ if ("ontouchstart" in document.documentElement) {
 -->
 <script src="js/impress.js"></script>
 <script src="js/impressConsole.js"></script>
+<script src="../rfmon/mqtt.js"></script>
 <script>
     impress().init();
     impressConsole().init();
+    var mqttClient = mqtt.connect({port: 3000});
+    mqttClient.on('connect', function () {
+        mqttClient.subscribe("poll/count");
+    });
+    mqttClient.on('message', function (topic, payload) {
+        var c = payload.toString();
+        var els = document.getElementsByClassName('poll_count');
+        for (var i = 0; els[i]; i++) {
+            els[i].innerText = c;
+        }
+    });
 </script>
 
 <!--
