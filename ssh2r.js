@@ -1,22 +1,24 @@
 var Client = require('ssh2').Client;
+var mqtt = require('mqtt');
+var mqtt_client;
 var options = {
   report: false,
   alpha: 0.9, // Smooth out interval between probe packets
   pinterval: 60*1000, // Initial expectation for probe interval
+  minterval: 3000, // Min interval.  Ignore pings within this duration
   dfactor: 5 // Assume disconnected if probe is later than dfactor*pinterval
 };
 var macDb = {};
-var mqtt;
-module.exports.rfmon = function (mclient, opts) {
-  opts.report = true;
+module.exports.rfmon = function (opts) {
+  options.report = true;
   if (opts)
     module.exports.setopts(opts);
-  mqtt = mclient;
+  mqtt_client = mqtt.connect();
   return connect();
 };
 module.exports.stop = function (conn) {
   conn.end();
-  opts.report = false;
+  options.report = false;
   macDb = {};
 };
 module.exports.setopts = function (opts) {
@@ -68,6 +70,8 @@ function processMac(mac) {
   if (macDb[mac].live) {
     var t = Date.now();
     var dt = t - macDb[mac].last;
+    if (dt < options.minterval)
+      return;
     macDb[mac].last = t;
     macDb[mac].session += dt;
     macDb[mac].freq = options.alpha*macDb[mac].freq + (1- options.alpha)*dt;
@@ -79,7 +83,7 @@ function processMac(mac) {
     macDb[mac].session = 0;
   }
   if (options.report) 
-    mqtt.publish("rfmon/mac/"+mac, JSON.stringify(macDb[mac]));
+    mqtt_client.publish("rfmon/mac/"+mac, JSON.stringify(macDb[mac]));
 }
 var lastCount = -1;
 setInterval(function () {
@@ -103,6 +107,6 @@ setInterval(function () {
     console.log(nl+"/"+n+" clients live");
   lastCount = nl;
   if (options.report) 
-    mqtt.publish("rfmon/count", nl);
+    mqtt_client.publish("rfmon/count", nl.toString());
 }, 1000);
 

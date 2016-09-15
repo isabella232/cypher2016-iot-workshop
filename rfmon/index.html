@@ -1,0 +1,106 @@
+<!doctype html>
+<html ng-app="rfmon">
+<head>
+  <meta charset="utf-8">
+  <title>WiFi Tracker Using DD-WRT RFMON</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    
+
+  <script src="mqtt.js"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+    <script data-require="ui-bootstrap@0.5.0" data-semver="0.5.0" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script>
+      angular.module('rfmon', [])
+        .controller('MacListCtrl', function ($scope) {
+          $scope.macs = [];
+          $scope.n = 0;
+          $scope.nmacs = 0;
+          var client = mqtt.connect({port:3000}); // you add a ws:// url here
+          client.subscribe("rfmon/count");
+          client.subscribe("rfmon/mac/+");
+
+          client.on("message", function(topic, payload) {
+            console.log([topic, payload].join(": "));
+            if (topic == 'rfmon/count')
+              $scope.n = parseInt(payload);
+            else {
+              var mac = topic.split('/')[2];
+              var obj = JSON.parse(payload);
+              console.log(mac, obj);
+              obj.mac = mac;
+              var ndx = $scope.macs.findIndex(function (m) {
+                return (m.mac == mac);
+              });
+              if (ndx >= 0)
+                $scope.macs.splice(ndx, 1);
+              $scope.macs.push(obj);
+            }
+            $scope.$apply();
+          });
+        })
+        .filter('stime', function() {
+          return function(x) {
+            if (x > 60*60*1000) {
+              var h = Math.floor(x/(60*60*1000));
+              var m = Math.floor((x-h*60*60*1000)/(60*1000));
+              var s = Math.floor((x-h*60*60*1000-m*60*1000)/(1000));
+              return h+':'+m+'.'+s;
+            } else if (x > 60*1000) {
+              var m = Math.floor((x)/(60*1000));
+              var s = Math.floor((x-m*60*1000)/(1000));
+              return m+'.'+s
+            } else if (x > 1000) {
+              x = Math.floor(x/100)/10;
+              return x + " s";
+            } else
+              return x + " ms";
+          }
+        });
+    </script>
+</head>
+<body ng-controller="MacListCtrl">
+  <nav class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">RFMON</a>
+    </div>
+  
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'">
+    
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Preview</a></li>
+        <li><a href="../impress.js">Presentation</a></li>
+        <li><a href="#">Instructions</a></li>          
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">About</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+  <div class="row"><div class="col-md-3 col-md-offset-2">
+    <h1>Active: {{n}}</h1>
+    <h3>Tracking: {{macs.length}}</h3>
+  </div></div>
+    
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+    <table class="table table-striped table-bordered table-condensed">
+    <tr><th>MAC</th><th>Last Seen</th><th>Session</th><th>Frequency</th></tr>
+    <tr ng-repeat="m in macs | orderBy:'-last'">
+      <td ng-style="{'color': m.live?'blue':'#7f7f7f'}">{{m.mac}}</td>
+        <td>{{m.last | date:'hh:mm:ss'}}</td>
+        <td>{{m.session | stime}}</td><td>{{m.session | stime}}</td>
+    </tr>
+    </table>
+    </div>
+  </div>    
+</body>
+</html>
